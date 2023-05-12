@@ -1,7 +1,6 @@
-const express = require("express");
 const Sequelize = require("sequelize");
 
-const db = new Sequelize("tmdb", null, null, {
+const db = new Sequelize("teezyco", null, null, {
   host: "localhost",
   dialect: "postgres",
   logging: false,
