@@ -1,13 +1,14 @@
-const sequelize=require('sequelize')
-const db=require("../db")
+const sequelize = require("sequelize");
+const db = require("../db");
 
+class Cart extends sequelize.Model {}
 
-class Cart extends sequelize.Model{}
+Cart.init(
+  {
+    userId: { type: sequelize.STRING, allowNull: false },
+    products: { type: sequelize.ARRAY(sequelize.JSONB), allowNull: false },
+  },
+  { sequelize: db, modelName: "Cart" }
+);
 
-Cart.init({
-  userId: {type: sequelize.STRING, allowNull: false},
-  products: {type: sequelize.ARRAY(sequelize.JSONB), allowNull: false},
- 
-},{sequelize:db, modelName: 'Cart'});
-
-module.exports= Cart
+module.exports = Cart;
