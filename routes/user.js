@@ -1,9 +1,8 @@
 const express = require('express')
 const router = express.Router();
 const User = require('../models/User');
-const UserController = require('../controllers/user');
-const { generateToken, validateToken } = require("../config/tokens");
-const { validateAuth } = require("../middleware/auth");
+const { generateToken } = require("../config/tokens");
+const { validateAuth } = require("../middlewares/auth");
 
 
 router.get('/', (req, res) => {
@@ -37,8 +36,8 @@ router.post('/login', (req, res) =>{
 
 router.post('/signup',(req, res)=>{
   console.log('entreeeeeee ',req.body);
-  User.create(req.body)
-  .then((user)=>{res.send(user)})
+  User.findOrCreate({where:{email},defaults: req.body})
+  .then((user)=>{res.send(user[0].dataValues)})
   .catch((error)=>{console.log(error)})
 } )
 

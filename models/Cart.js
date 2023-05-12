@@ -6,8 +6,8 @@ class Cart extends sequelize.Model{}
 
 Cart.init({
   userId: {type: sequelize.STRING, allowNull: false},
-  orders: {type: sequelize.ARRAY(sequelize.INTEGER), allowNull: false},
- orders: [{prodA:9},{prodB: 10}]
+  products: {type: sequelize.ARRAY(sequelize.JSONB), allowNull: false},
+ 
 },{sequelize:db, modelName: 'Cart'});
 
 module.exports= Cart
