@@ -1,33 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const { Product } = require("../models");
-const { generateToken } = require("../config/tokens");
-const { validateAuth } = require("../middlewares/auth");
 
-router.post("/create", (req, res) => {
-  Product.findOrCreate({ where: { id }, defaults: req.body }).then(
-    (product) => {
-      res.status(201).send(product[0].dataValues);
-    }
-  );
-});
+// Ruta para obtener todos los productos del usuario
+router.get('/all', (req, res) => {
+ Product.findAll ().then ((productos) => {
+ console.log ("productos", productos)
+ res.send (productos.map((product) => {
+  product.dataValues 
+ }))   })});
 
-router.delete("/delete/:id", (req, res) => {
-  const { id } = req.params;
 
-  User.destroy({ where: { id } })
-    .then((user) => {
-      res.status(202).send("Usuario eliminado");
-    })
-    .catch((error) => console.log(error));
-});
+ // Ruta para obtener un solo producto
+ router.get(`/:id`, (req, res) => {
+  const {id} = req.params
+  Product.findByPk (id).then ((product) => {
+    if (product) return res.send ("okkkk") 
+    if (!product) return res.send ("1")
+})
+})
 
-router.put("/promote/:id", (req, res) => {
-  const { id } = req.params;
-
-  User.update({ admin: true }, { where: { id } })
-    .then(() => res.status(200).send("Usuario actualizado"))
-    .catch((error) => console.log(error));
-});
 
 module.exports = router;
