@@ -10,8 +10,7 @@ Favorite.belongsTo(User);
 // User.hasMany(Purchase, { as: "orders" });
 // Purchase.belongsTo(User, { as: "buyer" });
 
-// User.hasOne(Cart);
-// Cart.belongsTo(User);
+Cart.belongsTo(User, { as: "cartOwner" });
 
 // Cart.hasMany(Product);
 // Product.belongsToMany(Cart);

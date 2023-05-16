@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const Cart = require("../models/Cart");
 const { generateToken } = require("../config/tokens");
 const { validateAuth } = require("../middlewares/auth");
 
@@ -32,13 +33,11 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/signup", (req, res) => {
-  console.log("entreeeeeee ", req.body);
-
-  const { email } = req.body;
-
-  User.findOrCreate({ where: { email }, defaults: req.body })
+  User.create(req.body)
     .then((user) => {
-      res.send(user[0].dataValues);
+      Cart.create()
+        .then((cart) => cart.setCartOwner(user))
+        .then(() => res.send("Usuario creado con su carrito"));
     })
     .catch((error) => {
       console.log(error);
