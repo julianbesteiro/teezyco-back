@@ -1,13 +1,14 @@
-const sequelize=require('sequelize')
-const db=require("../db")
+const sequelize = require("sequelize");
+const db = require("../db");
 
+class Purchase extends sequelize.Model {}
 
-class Purchase extends sequelize.Model{}
+Purchase.init(
+  {
+    orders: { type: sequelize.ARRAY(sequelize.JSONB), allowNull: false },
+    date: { type: sequelize.DATE, allowNull: false },
+  },
+  { sequelize: db, modelName: "Purchase" }
+);
 
-Purchase.init({
-  userId: {type: sequelize.STRING, allowNull: false},
-  orders: {type: sequelize.ARRAY(sequelize.JSONB), allowNull: false},
- 
-},{sequelize:db, modelName: 'Purchase'});
-
-module.exports= Purchase
+module.exports = Purchase;

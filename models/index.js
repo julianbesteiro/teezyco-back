@@ -4,21 +4,22 @@ const Purchase = require("./Purchase");
 const Product = require("./Product");
 const Cart = require("./Cart");
 
-User.hasMany(Favorite);
 Favorite.belongsTo(User);
+User.hasMany(Favorite);
 
-// User.hasMany(Purchase, { as: "orders" });
-// Purchase.belongsTo(User, { as: "buyer" });
+User.hasMany(Purchase);
+Purchase.belongsTo(User, { as: "buyer" });
 
 Cart.belongsTo(User, { as: "cartOwner" });
+User.hasOne(Cart, { as: "cartOwner" });
 
-// Cart.hasMany(Product);
-// Product.belongsToMany(Cart);
+Cart.hasMany(Product);
+Product.belongsTo(Cart);
 
-// Purchase.hasMany(Product);
-// Product.belongsToMany(Purchase);
+Purchase.belongsToMany(Product, { through: "purchaseProducts" });
+Product.belongsToMany(Purchase, { through: "purchaseProducts" });
 
-// Favorite.hasMany(Product);
-// Product.belongsToMany(Favorite);
+Favorite.belongsToMany(Product, { through: "favoriteProducts" });
+Product.belongsToMany(Favorite, { through: "favoriteProducts" });
 
 module.exports = { User, Favorite, Purchase, Product, Cart };

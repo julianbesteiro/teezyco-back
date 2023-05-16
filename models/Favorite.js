@@ -1,11 +1,13 @@
-const sequelize=require('sequelize')
-const db=require("../db")
+const sequelize = require("sequelize");
+const db = require("../db");
 
+class Favorite extends sequelize.Model {}
 
-class Favorite extends sequelize.Model{}
+Favorite.init(
+  {
+    products: { type: sequelize.ARRAY(sequelize.JSONB), defaultValue: [] },
+  },
+  { sequelize: db, modelName: "Favorite" }
+);
 
-Favorite.init({
-  
-},{sequelize:db, modelName: 'Favorite'});
-
-module.exports=Favorite
+module.exports = Favorite;
