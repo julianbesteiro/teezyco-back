@@ -19,8 +19,8 @@ class User extends sequelize.Model{
 }
 
 User.init({
-  email: {type: sequelize.STRING, allowNull: false},
-  user: {type: sequelize.STRING, allowNull: false},
+  
+  email: {type: sequelize.STRING, allowNull: false, unique:true},
   name: {type: sequelize.STRING, allowNull: false},
   lastName: {type: sequelize.STRING, allowNull: false},
   password: {type: sequelize.STRING, allowNull: false},
