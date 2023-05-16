@@ -12,7 +12,7 @@ Product.init(
     price: { type: sequelize.INTEGER, allowNull: false },
     title: { type: sequelize.STRING, allowNull: false },
     description: { type: sequelize.TEXT, allowNull: false },
-    image: { type: sequelize.ARRAY(sequelize.STRING), allowNull: false },
+    image: { type: sequelize.STRING, allowNull: false },
   },
   { sequelize: db, modelName: "Product" }
 );
