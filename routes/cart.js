@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const Sequelize = require("sequelize");
 
 //CARRITO SE CREA CON SIGN UP
 
@@ -27,19 +28,13 @@ router.post("/add/:cartId/:productId", (req, res) => {
   const cartId = Number(req.params.cartId);
   const productId = Number(req.params.productId);
 
-  //  if (quantity == undefined) quantity = 1;
-
   Cart.findByPk(cartId)
     .then((cart) => {
       const products = cart.dataValues.products;
 
       if (products.find((prod) => Number(Object.keys(prod)[0]) === productId)) {
-        console.error("El producto ya está en el carrito");
-
         products.map((prod) => {
           if (Number(Object.keys(prod)[0]) === productId) {
-            console.log("QUANTITY", quantity);
-
             if (quantity == undefined) prod[Object.keys(prod)[0]] += 1;
             else {
               prod[Object.keys(prod)[0]] = quantity;
@@ -48,29 +43,38 @@ router.post("/add/:cartId/:productId", (req, res) => {
         });
       } else {
         products.push({ [productId]: 1 });
-        console.log("PRODUCTS POST PUSH", products);
-        //products = [...products, { productId: 1 }];
       }
 
-      Cart.update({ products }, { where: { id: cartId } })
-        .then(() => {
-          //res.status(202).send("Carrito modificado correctamente");
-        })
-        .then(() => {
-          console.log("PRODUCTS", products);
+      Cart.update({ products }, { where: { id: cartId } }).then(() => {
+        console.log("PRODUCTS", products);
 
-          products.map((prod) => {
-            Product.findByPk(Number(Object.keys(prod)[0])).then(
-              (product) => {}
-            );
+        const productsIds = products.map((prod) =>
+          Number(Object.keys(prod)[0])
+        );
 
-            return;
+        Product.findAll({
+          where: { id: { [Sequelize.Op.in]: productsIds } },
+        }).then((products) => {
+          console.log("PRODUCTS FIND ALL", products);
+          products.map((product) => {
+            product.dataValues;
           });
           res.send(products);
         });
+      });
     })
     .catch((error) => console.log(error));
 });
+
+// products.map((prod) => {
+//   Product.findByPk(Number(Object.keys(prod)[0])).then((product) => {
+//     objetoDeProductosParaFront[product.id] =
+//       product.dataValues
+//   });
+//   // return objetoDeProductosParaFront;
+// });
+
+//});
 
 //MODIFICAR CANTIDAD DE PRODUCTOS DEL CARRITO
 
