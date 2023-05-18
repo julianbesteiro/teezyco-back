@@ -14,12 +14,20 @@ router.get("/:cartId", (req, res) => {
 
   Cart.findByPk(cartId)
     .then((cart) => {
-      console.log("CART EN GET", cart.dataValues.products);
-      res.send(cart);
-    })
-    .catch((error) => console.log(error));
-});
+      const productsIds = cart.dataValues.products.map((prod) =>
+        Number(Object.keys(prod)[0])
+      );
 
+      Product.findAll({
+        where: { id: { [Sequelize.Op.in]: productsIds } },
+      }).then((products) => {
+        products.map((product) => {
+          product.dataValues;
+        });
+        res.send(products);
+      })
+  }).catch((error) => console.log(error));
+})
 //AGREGAR UN PRODUCTO AL CARRITO
 
 router.post("/add/:cartId/:productId", (req, res) => {
