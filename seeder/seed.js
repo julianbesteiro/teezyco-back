@@ -5,44 +5,6 @@ const { User } = require('../models');
 const sequelize = require('sequelize'); 
 const bcrypt = require('bcrypt')
 
-// Crear una función asincrónica para sembrar los datos
-async function seedData() {
-  try {
-    
-    
-    const users = [
-      { name: 'Usuario 1', email: 'usuario1@example.com', lastName: 'blall', password: '1234' },
-      { name: 'Usuario 2', email: 'usuario2@example.com', lastName: 'blalqfl', password: '1234' },
-      { name: 'Usuario 3', email: 'usuario3@example.com', lastName: 'bladvll', password: '1234' }
-    ];
-
-    // Hashear las contraseñas antes de guardar los usuarios
-    
-    const hashedUsers = await Promise.all(
-      users.map(async (user) => {
-        const salt = bcrypt.genSaltSync(8);
-        const hashedPassword = await bcrypt.hash(user.password, salt);
-        return {
-          ...user,
-          password: hashedPassword,
-          salt: salt
-        };
-      })
-      );
-
-      // Crear y guardar los usuarios en la base de datos
-      await User.bulkCreate(hashedUsers);
-      
-    console.log('Datos sembrados exitosamente');
-  } catch (error) {
-    console.error('Error al sembrar los datos:', error);
-  }
-}
-
-// Llamar a la función de sembrado
-seedData();
-
-
 // Función asincrónica para sembrar los datos de productos
 async function seedProducts() {
   try {
