@@ -55,23 +55,10 @@ router.delete("/delete/:id", (req, res) => {
 
 router.put("/mod/:id", (req, res) => {
   const { id } = req.params;
-  const { size, color, model, stock, price, title, description, image } =
-    req.body;
+  const updatedFields = req.body;
 
-  Product.update(
-    {
-      size: size.toLowerCase(),
-      color: color.toLowerCase(),
-      model: model.toLowerCase(),
-      stock: stock,
-      price: price,
-      title: title.toLowerCase(),
-      description: description.toLowerCase(),
-      image: image.toLowerCase(),
-    },
-    { where: { id } }
-  )
-    .then((product) => res.status(200).send(product))
+  Product.update(updatedFields, { where: { id } })
+    .then(() => res.status(200).send("Product updated successfully"))
     .catch((error) => console.log(error));
 });
 
