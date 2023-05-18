@@ -7,10 +7,10 @@ const Sequelize = require("sequelize");
 router.get("/all", (req, res) => {
   Product.findAll().then((productos) => {
     console.log("productos", productos);
-    
-     const productitos = productos.map((product) => product.dataValues)
-    res.send(productitos)
-  })
+
+    const productitos = productos.map((product) => product.dataValues);
+    res.send(productitos);
+  });
 });
 
 // Ruta para obtener un solo producto
@@ -60,14 +60,14 @@ router.put("/mod/:id", (req, res) => {
 
   Product.update(
     {
-      size: size,
-      color: color,
-      model: model,
+      size: size.toLowerCase(),
+      color: color.toLowerCase(),
+      model: model.toLowerCase(),
       stock: stock,
       price: price,
-      title: title,
-      description: description,
-      image: image,
+      title: title.toLowerCase(),
+      description: description.toLowerCase(),
+      image: image.toLowerCase(),
     },
     { where: { id } }
   )
