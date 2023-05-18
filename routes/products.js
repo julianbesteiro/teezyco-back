@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Product } = require("../models");
+const Sequelize = require("sequelize");
 
 // Ruta para obtener todos los productos del usuario
 router.get("/all", (req, res) => {
@@ -84,9 +85,23 @@ router.get("/search/:term", (req, res) => {
   console.log("TERM", term);
   Product.findAll({
     where: {
-      title: {
-        [Sequelize.Op.substring]: term.toLowerCase(),
-      },
+      [Sequelize.Op.or]: [
+        {
+          title: {
+            [Sequelize.Op.substring]: term.toLowerCase(),
+          },
+        },
+        {
+          model: {
+            [Sequelize.Op.substring]: term.toLowerCase(),
+          },
+        },
+        {
+          description: {
+            [Sequelize.Op.substring]: term.toLowerCase(),
+          },
+        },
+      ],
     },
   })
     .then((productos) => {
