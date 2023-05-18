@@ -18,8 +18,8 @@ router.get("/all", (req, res) => {
 router.get(`/:id`, (req, res) => {
   const { id } = req.params;
   Product.findByPk(id).then((product) => {
-    if (product) return res.send("okkkk");
-    if (!product) return res.send("1");
+    if (product) return res.send(product);
+    if (!product) return res.send("Por aqui no hay nada");
   });
 });
 
