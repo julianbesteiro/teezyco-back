@@ -6,12 +6,10 @@ const { Product } = require("../models");
 router.get("/all", (req, res) => {
   Product.findAll().then((productos) => {
     console.log("productos", productos);
-    res.send(
-      productos.map((product) => {
-        product.dataValues;
-      })
-    );
-  });
+    
+     const productitos = productos.map((product) => product.dataValues)
+    res.send(productitos)
+  })
 });
 
 // Ruta para obtener un solo producto
