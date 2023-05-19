@@ -21,7 +21,7 @@ router.post("/login", (req, res) => {
         email: user.email,
         name: user.name,
         lastName: user.lastName,
-        id:user.id
+        id: user.id,
       };
 
       const token = generateToken(payload);
@@ -66,7 +66,7 @@ router.put("/update/:id", (req, res) => {
 //RUTAS USER ADMIN
 
 router.get("/all", (req, res) => {
-  User.findAll().then((users) => {
+  User.findAll({ order: [["id", "ASC"]] }).then((users) => {
     console.log("USERS", users);
     res.send(users.map((user) => user.dataValues));
   });
@@ -82,10 +82,15 @@ router.delete("/delete/:id", (req, res) => {
     .catch((error) => console.log(error));
 });
 
-router.put("/promote/:id", (req, res) => {
+router.put("/changeadmin/:id", (req, res) => {
   const { id } = req.params;
 
-  User.update({ admin: true }, { where: { id } })
+  User.findOne({ where: { id } })
+    .then((user) => {
+      const status = !user.admin;
+
+      User.update({ admin: status }, { where: { id } });
+    })
     .then(() => res.status(200).send("Usuario actualizado"))
     .catch((error) => console.log(error));
 });
