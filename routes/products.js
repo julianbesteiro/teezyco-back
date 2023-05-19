@@ -6,8 +6,6 @@ const Sequelize = require("sequelize");
 // Ruta para obtener todos los productos del usuario
 router.get("/all", (req, res) => {
   Product.findAll().then((productos) => {
-    console.log("productos", productos);
-
     const productitos = productos.map((product) => product.dataValues);
     res.send(productitos);
   });
@@ -67,7 +65,6 @@ router.put("/mod/:id", (req, res) => {
 router.get("/search/:term", (req, res) => {
   const { term } = req.params;
 
-  console.log("TERM", term);
   Product.findAll({
     where: {
       [Sequelize.Op.or]: [
@@ -90,7 +87,6 @@ router.get("/search/:term", (req, res) => {
     },
   })
     .then((productos) => {
-      console.log("PRODUCTOS", productos);
       res.send(productos);
     })
     .catch((error) => {
