@@ -14,6 +14,7 @@ router.get("/:cartId", (req, res) => {
 
   Cart.findByPk(cartId)
     .then((cart) => {
+      console.log("CART EN GET", cart);
       const productsIds = cart.dataValues.products.map((prod) =>
         Number(Object.keys(prod)[0])
       );
@@ -21,13 +22,23 @@ router.get("/:cartId", (req, res) => {
       Product.findAll({
         where: { id: { [Sequelize.Op.in]: productsIds } },
       }).then((products) => {
+        console.log("PRODUCTS en cart", products);
         products.map((product) => {
+          product.dataValues.quantity = Number(
+            Object.values(
+              cart.dataValues.products[
+                productsIds.indexOf(product.dataValues.id)
+              ]
+            )
+          );
+
           product.dataValues;
         });
         res.send(products);
-      })
-  }).catch((error) => console.log(error));
-})
+      });
+    })
+    .catch((error) => console.log(error));
+});
 //AGREGAR UN PRODUCTO AL CARRITO
 
 router.post("/add/:cartId/:productId", (req, res) => {
