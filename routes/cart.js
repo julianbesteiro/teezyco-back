@@ -14,7 +14,6 @@ router.get("/:cartId", (req, res) => {
 
   Cart.findByPk(cartId)
     .then((cart) => {
-      console.log("CART EN GET", cart);
       const productsIds = cart.dataValues.products.map((prod) =>
         Number(Object.keys(prod)[0])
       );
@@ -22,7 +21,6 @@ router.get("/:cartId", (req, res) => {
       Product.findAll({
         where: { id: { [Sequelize.Op.in]: productsIds } },
       }).then((products) => {
-        console.log("PRODUCTS en cart", products);
         products.map((product) => {
           product.dataValues.quantity = Number(
             Object.values(
@@ -47,8 +45,11 @@ router.post("/add/:cartId/:productId", (req, res) => {
   const cartId = Number(req.params.cartId);
   const productId = Number(req.params.productId);
 
+  console.log("Q", req.body.quantity, "cartId", cartId, "productId", productId);
+
   Cart.findByPk(cartId)
     .then((cart) => {
+      console.log("CART", cart);
       const products = cart.dataValues.products;
 
       if (products.find((prod) => Number(Object.keys(prod)[0]) === productId)) {
@@ -61,7 +62,10 @@ router.post("/add/:cartId/:productId", (req, res) => {
           }
         });
       } else {
-        products.push({ [productId]: 1 });
+        if (quantity == undefined) products.push({ [productId]: 1 });
+        else {
+          products.push({ [productId]: quantity });
+        }
       }
 
       Cart.update({ products }, { where: { id: cartId } }).then(() => {

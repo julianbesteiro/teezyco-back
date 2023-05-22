@@ -25,6 +25,7 @@ router.get(`/:id`, (req, res) => {
 router.post("/create", (req, res) => {
   const { size, color, categoryId, stock, price, title, description, image } =
     req.body;
+
   Product.create({
     size: size.toLowerCase(),
     color: color.toLowerCase(),
@@ -65,35 +66,37 @@ router.put("/mod/:id", (req, res) => {
 router.get("/search/:term", (req, res) => {
   const { term } = req.params;
 
-  console.log("TERM", typeof Number(term));
-  Product.findAll({
-    where: {
-      [Sequelize.Op.or]: [
-        {
-          title: {
-            [Sequelize.Op.substring]: term.toLowerCase(),
+  if (term !== "undefined") {
+    Product.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          {
+            title: {
+              [Sequelize.Op.substring]: term.toLowerCase(),
+            },
           },
-        },
-        {
-          categoryId: {
-            [Sequelize.Op.eq]: Number(term),
+
+          {
+            categoryId: {
+              [Sequelize.Op.substring]: term.toLowerCase(),
+            },
           },
-        },
-        {
-          description: {
-            [Sequelize.Op.substring]: term.toLowerCase(),
+          {
+            description: {
+              [Sequelize.Op.substring]: term.toLowerCase(),
+            },
           },
-        },
-      ],
-    },
-  })
-    .then((productos) => {
-      res.send(productos);
+        ],
+      },
     })
-    .catch((error) => {
-      console.error("Error al buscar productos:", error);
-      res.status(500).send("Error al buscar productos");
-    });
+      .then((productos) => {
+        res.send(productos);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error al buscar productos");
+      });
+  }
 });
 
 module.exports = router;
