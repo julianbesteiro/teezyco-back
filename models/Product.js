@@ -7,7 +7,7 @@ Product.init(
   {
     size: { type: sequelize.STRING, allowNull: false },
     color: { type: sequelize.STRING, allowNull: false },
-    categoryId: { type: sequelize.INTEGER, allowNull: false },
+    categoryId: { type: sequelize.STRING, allowNull: false },
     stock: { type: sequelize.INTEGER, allowNull: false },
     price: { type: sequelize.INTEGER, allowNull: false },
     title: { type: sequelize.STRING, allowNull: false },

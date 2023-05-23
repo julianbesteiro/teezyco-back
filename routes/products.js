@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Product } = require("../models");
+const { Product, Category } = require("../models");
 const Sequelize = require("sequelize");
 
 // Ruta para obtener todos los productos del usuario
@@ -75,10 +75,9 @@ router.get("/search/:term", (req, res) => {
               [Sequelize.Op.substring]: term.toLowerCase(),
             },
           },
-
           {
             categoryId: {
-              [Sequelize.Op.substring]: term.toLowerCase(),
+              [Sequelize.Op.eq]: term,
             },
           },
           {
