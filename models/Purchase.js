@@ -5,8 +5,8 @@ class Purchase extends sequelize.Model {}
 
 Purchase.init(
   {
-    orders: { type: sequelize.ARRAY(sequelize.JSONB), allowNull: false },
-    date: { type: sequelize.DATE, allowNull: false },
+    userId: { type: sequelize.STRING, allowNull: false },
+    products: { type: sequelize.ARRAY(sequelize.JSONB), defaultValue: [] },
   },
   { sequelize: db, modelName: "Purchase" }
 );
