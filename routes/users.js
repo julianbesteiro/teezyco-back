@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Cart = require("../models/Cart");
 const { generateToken } = require("../config/tokens");
 const { validateAuth } = require("../middlewares/auth");
+const Favorite = require("../models/Favorite");
 
 router.get("/", (req, res) => {
   res.send("entre");
@@ -36,14 +37,21 @@ router.post("/login", (req, res) => {
 router.post("/signup", (req, res) => {
   User.create(req.body)
     .then((user) => {
-      Cart.create()
-        .then((cart) => cart.setCartOwner(user))
-        .then(() => res.send("Usuario creado con su carrito"));
+      Favorite.create({ id: user.id }) 
+        .then((favorite) => {
+          user.setFavorite(favorite); 
+        })
+        .then(() => {
+          Cart.create() 
+            .then((cart) => cart.setCartOwner(user))
+            .then(() => res.send("Usuario creado con su carrito y favorito"));
+        });
     })
     .catch((error) => {
       console.log(error);
     });
 });
+
 
 router.get("/me", validateAuth, (req, res) => {
   res.send(req.user);

@@ -6,7 +6,7 @@ const Cart = require("./Cart");
 const Category = require("./Category");
 
 Favorite.belongsTo(User);
-User.hasMany(Favorite);
+User.hasOne(Favorite);
 
 User.hasMany(Purchase);
 Purchase.belongsTo(User, { as: "buyer" });

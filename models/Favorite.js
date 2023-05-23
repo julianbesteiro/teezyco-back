@@ -5,7 +5,7 @@ class Favorite extends sequelize.Model {}
 
 Favorite.init(
   {
-    products: { type: sequelize.ARRAY(sequelize.JSONB), defaultValue: [] },
+    products: { type: sequelize.ARRAY(sequelize.INTEGER), defaultValue: [] },
   },
   { sequelize: db, modelName: "Favorite" }
 );
