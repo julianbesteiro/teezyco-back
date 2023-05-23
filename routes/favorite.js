@@ -15,12 +15,12 @@ router.get('/:id', (req, res) => {
 
       res.send(favorites);
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(() => {
+      
       res.status(500).send("Error al obtener los favoritos");
     });
 });
-
+//agregar favorito
 router.post('/add/:userId', (req, res) => {
   const { userId } = req.params;
   const  {productId}  = req.body;
@@ -39,35 +39,29 @@ router.post('/add/:userId', (req, res) => {
     .then((updatedFavorite) => {
       res.send(updatedFavorite.dataValues);
     })
-    .catch((error) => {
+    .catch(() => {
       res.send("Error al agregar producto al favorito")
     });
 });
 
 // Ruta para eliminar un producto del favorito
-router.delete('/remove/:favoriteId/:productId', (req, res) => {
-  const { favoriteId, productId } = req.params;
+router.delete('/remove/:userId/:productId', (req, res) => {
+  const { userId, productId } = req.params;
 
-  Favorite.findByPk(favoriteId)
+  Favorite.findByPk(userId)
     .then((favorite) => {
       if (favorite) {
-        const index = favorite.products.findIndex((product) => product.id === productId);
-        if (index !== -1) {
-          favorite.products.splice(index, 1);
-          return favorite.save();
-        } else {
-          throw new Error('Product not found in favorite');
-        }
+        favorite.update(favorite.products = favorite.products.filter((elem)=>elem!=productId))
+        return favorite.save()
       } else {
         throw new Error('Favorite not found');
       }
     })
     .then((updatedFavorite) => {
-      console.log('Producto eliminado del favorito:', updatedFavorite);
       res.send(updatedFavorite);
     })
-    .catch((error) => {
-      console.error('Error al eliminar producto del favorito:', error);
+    .catch(() => {
+      res.send('Error al eliminar producto del favorito');
     });
 });
 
