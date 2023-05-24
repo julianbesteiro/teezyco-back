@@ -45,11 +45,8 @@ router.post("/add/:cartId/:productId", (req, res) => {
   const cartId = Number(req.params.cartId);
   const productId = Number(req.params.productId);
 
-  console.log("Q", req.body.quantity, "cartId", cartId, "productId", productId);
-
   Cart.findByPk(cartId)
     .then((cart) => {
-      console.log("CART", cart);
       const products = cart.dataValues.products;
 
       if (products.find((prod) => Number(Object.keys(prod)[0]) === productId)) {
@@ -69,8 +66,6 @@ router.post("/add/:cartId/:productId", (req, res) => {
       }
 
       Cart.update({ products }, { where: { id: cartId } }).then(() => {
-        console.log("PRODUCTS", products);
-
         const productsIds = products.map((prod) =>
           Number(Object.keys(prod)[0])
         );
@@ -78,7 +73,6 @@ router.post("/add/:cartId/:productId", (req, res) => {
         Product.findAll({
           where: { id: { [Sequelize.Op.in]: productsIds } },
         }).then((products) => {
-          console.log("PRODUCTS FIND ALL", products);
           products.map((product) => {
             product.dataValues;
           });
@@ -88,40 +82,6 @@ router.post("/add/:cartId/:productId", (req, res) => {
     })
     .catch((error) => console.log(error));
 });
-
-// products.map((prod) => {
-//   Product.findByPk(Number(Object.keys(prod)[0])).then((product) => {
-//     objetoDeProductosParaFront[product.id] =
-//       product.dataValues
-//   });
-//   // return objetoDeProductosParaFront;
-// });
-
-//});
-
-//MODIFICAR CANTIDAD DE PRODUCTOS DEL CARRITO
-
-// router.put("/quantity/:cartId/:productId", (req, res) => {
-//   const quantity = Number(req.body.quantity);
-//   const cartId = Number(req.params.cartId);
-//   const productId = Number(req.params.productId);
-
-//   Cart.findByPk(cartId).then((cart) => {
-//     const products = cart.dataValues.products;
-
-//     products.map((prod) => {
-//       if (Number(Object.keys(prod)[0]) === productId) {
-//         prod[Object.keys(prod)[0]] = quantity;
-//       }
-//     });
-
-//     Cart.update({ products }, { where: { id: cartId } })
-//       .then(() => {
-//         res.status(202).send("Cantidad de productos actualizada");
-//       })
-//       .catch((error) => console.log(error));
-//   });
-// });
 
 //ELIMINAR PRODUCTO DE CARRITO
 
@@ -135,8 +95,6 @@ router.put("/delete/:cartId/:productId", (req, res) => {
     const productsFiltrado = products.filter(
       (prod) => Number(Object.keys(prod)[0]) !== productId
     );
-
-    console.log("PRODUCTS DESPUES DE FILTER", productsFiltrado);
 
     Cart.update({ products: productsFiltrado }, { where: { id: cartId } })
       .then(() => {

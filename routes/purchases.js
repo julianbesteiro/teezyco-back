@@ -25,8 +25,6 @@ router.post("/confirm/:cartId", (req, res) => {
   const cartId = Number(req.params.cartId);
   const { productsPurchase } = req.body;
 
-  //REQ BODY TRAE USER ID, DETALLE DE COMPRA (PRODUCTOS, CANTIDADES, PRECIO UNITARIO), PRECIO FINAL
-  //VACIAR CARRITO
   Cart.findByPk(cartId).then((cart) => {
     const products = [];
 
