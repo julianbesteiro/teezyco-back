@@ -6,7 +6,7 @@ const Product = require("../models/Product");
 const Sequelize = require("sequelize");
 
 router.get("/all", (req, res) => {
-  Purchase.findAll().then((purchases) => {
+  Purchase.findAll({ order: [["id", "ASC"]] }).then((purchases) => {
     res.send(purchases.map((purchase) => purchase.dataValues));
   });
 });
