@@ -197,7 +197,29 @@ async function seedCategories() {
   }
 }
 
-// Llamar a la función de sembrado de productos y de categorias
+async function seedUsers() {
+  try {
+    const users = [
+      {
+        email: "juan@a.com",
+        name: "Admin",
+        lastName: "User",
+        password: "hola",
+      },
+    ];
+
+    // Crear y guardar las cateogrias en la base de datos
+    await User.bulkCreate(users);
+
+    console.log("Usuarios sembrados exitosamente");
+  } catch (error) {
+    console.error("Error al sembrar los datos de los usuarios:", error);
+  }
+}
+
+// Llamar a la función de sembrado de productos, de categorias y de usuarios
 seedProducts();
 
 seedCategories();
+
+seedUsers();
