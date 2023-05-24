@@ -21,16 +21,15 @@ router.get('/:id', (req, res) => {
     });
 });
 //agregar favorito
-router.post('/add/:userId', (req, res) => {
-  const { userId } = req.params;
-  const  {productId}  = req.body;
-
+router.post('/add/:userId/:productId', (req, res) => {
+  const { userId, productId} = req.params;
+   
   Favorite.findByPk(userId)
     .then((favorite) => {
 
-      if (favorite&&!favorite.products.includes(productId)) {
+      if (favorite&&!favorite.products.includes(JSON.parse(productId) )) {
         
-        favorite.update(favorite.products = [...favorite.products, productId]);
+        favorite.update(favorite.products = [...favorite.products, JSON.parse(productId)]);
         return favorite.save();
       } else {
         throw new Error('Favorite not found');
