@@ -1,5 +1,5 @@
 const sequelize = require("sequelize");
-const db = require("../db");
+const db = require("../config/db");
 
 class Product extends sequelize.Model {}
 

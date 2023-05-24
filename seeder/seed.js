@@ -26,7 +26,7 @@ async function seedProducts() {
       {
         title: "Dumb Days Oversize",
         description:
-          '"Esta remera oversize de "Dumd Days" es una prenda que combina estilo y comodidad en un diseño contemporáneo. Confeccionada con un tejido suave y ligero, te brinda una sensación de máxima comodidad durante todo el día.',
+          'Esta remera oversize de "Dumd Days" es una prenda que combina estilo y comodidad en un diseño contemporáneo. Confeccionada con un tejido suave y ligero, te brinda una sensación de máxima comodidad durante todo el día.',
         price: 11900,
         size: "One-size",
         color: "White",

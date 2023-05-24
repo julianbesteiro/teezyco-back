@@ -28,7 +28,6 @@ router.post("/login", (req, res) => {
 
       const token = generateToken(payload);
 
-      console.log("Token:", token);
       res.cookie("token", token);
       res.send(payload);
     });
@@ -75,7 +74,6 @@ router.put("/update/:id", (req, res) => {
 
 router.get("/all", (req, res) => {
   User.findAll({ order: [["id", "ASC"]] }).then((users) => {
-    console.log("USERS", users);
     res.send(users.map((user) => user.dataValues));
   });
 });

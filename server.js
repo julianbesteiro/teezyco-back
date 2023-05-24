@@ -1,6 +1,6 @@
 // Configuración del server
 const express = require("express");
-const db = require("./db");
+const db = require("./config/db");
 const routes = require("./routes");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
