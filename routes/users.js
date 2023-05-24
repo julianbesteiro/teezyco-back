@@ -23,6 +23,7 @@ router.post("/login", (req, res) => {
         name: user.name,
         lastName: user.lastName,
         id: user.id,
+        admin: user.admin,
       };
 
       const token = generateToken(payload);
@@ -37,12 +38,12 @@ router.post("/login", (req, res) => {
 router.post("/signup", (req, res) => {
   User.create(req.body)
     .then((user) => {
-      Favorite.create({ id: user.id }) 
+      Favorite.create({ id: user.id })
         .then((favorite) => {
-          user.setFavorite(favorite); 
+          user.setFavorite(favorite);
         })
         .then(() => {
-          Cart.create() 
+          Cart.create()
             .then((cart) => cart.setCartOwner(user))
             .then(() => res.send("Usuario creado con su carrito y favorito"));
         });
@@ -51,7 +52,6 @@ router.post("/signup", (req, res) => {
       console.log(error);
     });
 });
-
 
 router.get("/me", validateAuth, (req, res) => {
   res.send(req.user);
