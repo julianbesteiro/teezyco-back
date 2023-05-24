@@ -5,7 +5,7 @@ const Sequelize = require("sequelize");
 
 // Ruta para obtener todos los productos del usuario
 router.get("/all", (req, res) => {
-  Product.findAll().then((productos) => {
+  Product.findAll({ order: [["id", "ASC"]] }).then((productos) => {
     const productitos = productos.map((product) => product.dataValues);
     res.send(productitos);
   });
