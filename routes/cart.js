@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const Sequelize = require("sequelize");
+const { ProductosCarrito } = require("../models");
 
 //CARRITO SE CREA CON SIGN UP
 
@@ -79,6 +80,42 @@ router.post("/add/:cartId/:productId", (req, res) => {
           res.send(products);
         });
       });
+    })
+    .catch((error) => console.log(error));
+});
+
+//VARIANTE
+router.post("/addd/:cartId/:productId", (req, res) => {
+  const cartId = Number(req.params.cartId);
+  const productId = Number(req.params.productId);
+  let quantity;
+  if (req.body.quantity) quantity = Number(req.body.quantity);
+
+  ProductosCarrito.create({
+    quantity,
+  })
+    .then((productoCarrito) => {
+      Cart.findByPk(cartId).then((cart) => {
+        productoCarrito.setCart(cart);
+        Product.findByPk(productId).then((product) => {
+          productoCarrito.setProduct(product);
+        });
+      });
+      res.status(201).send("ok");
+    })
+    .catch((error) => console.log(error));
+});
+
+router.get("/prodCarrito/:cartId", (req, res) => {
+  const cartId = Number(req.params.cartId);
+
+  ProductosCarrito.findAll({
+    where: { CartId: cartId },
+    include: { model: Product },
+  })
+    .then((productosCarrito) => {
+      console.log("result", productosCarrito);
+      res.status(201).send(productosCarrito);
     })
     .catch((error) => console.log(error));
 });

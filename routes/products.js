@@ -80,11 +80,11 @@ router.get("/search/:term", (req, res) => {
               [Sequelize.Op.eq]: term,
             },
           },
-          {
-            description: {
-              [Sequelize.Op.substring]: term.toLowerCase(),
-            },
-          },
+          // {
+          //   description: {
+          //     [Sequelize.Op.substring]: term.toLowerCase(),
+          //   },
+          // },
         ],
       },
     })
