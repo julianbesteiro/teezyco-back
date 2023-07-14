@@ -1,29 +1,46 @@
 const User = require("./User");
-const Favorite = require("./Favorite");
 const Purchase = require("./Purchase");
 const Product = require("./Product");
 const Cart = require("./Cart");
 const Category = require("./Category");
+const ProductosCarrito = require("./ProductosCarrito");
+const ProductosPurchase = require("./ProductosPurchase");
+const Favorite = require("./Favorite");
+
+User.belongsToMany(Product, { through: "userFavorites" });
+Product.belongsToMany(User, { through: "userFavorites" });
+
+User.hasMany(Purchase);
+Purchase.belongsTo(User);
+
+Cart.belongsTo(User);
+User.hasOne(Cart);
 
 Favorite.belongsTo(User);
 User.hasOne(Favorite);
 
-User.hasMany(Purchase);
-Purchase.belongsTo(User, { as: "buyer" });
-
-Cart.belongsTo(User, { as: "cartOwner" });
-User.hasOne(Cart, { as: "cartOwner" });
-
-Cart.hasMany(Product);
-Product.belongsTo(Cart);
-
 Category.hasMany(Product);
 Product.belongsTo(Category);
 
-Purchase.belongsToMany(Product, { through: "purchaseProducts" });
-Product.belongsToMany(Purchase, { through: "purchaseProducts" });
+ProductosCarrito.belongsTo(Product);
+Product.hasMany(ProductosCarrito);
 
-Favorite.belongsToMany(Product, { through: "favoriteProducts" });
-Product.belongsToMany(Favorite, { through: "favoriteProducts" });
+ProductosCarrito.belongsTo(Cart);
+Cart.hasOne(ProductosCarrito);
 
-module.exports = { User, Favorite, Purchase, Product, Cart, Category };
+ProductosPurchase.belongsTo(Product);
+Product.hasMany(ProductosPurchase);
+
+ProductosPurchase.belongsTo(Purchase);
+Purchase.hasOne(ProductosPurchase);
+
+module.exports = {
+  User,
+  Purchase,
+  Product,
+  Cart,
+  Category,
+  ProductosCarrito,
+  ProductosPurchase,
+  Favorite,
+};

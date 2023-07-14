@@ -2,12 +2,28 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Cart = require("../models/Cart");
+const Product = require("../models/Product");
+
 const { generateToken } = require("../config/tokens");
 const { validateAuth } = require("../middlewares/auth");
 const Favorite = require("../models/Favorite");
 
 router.get("/", (req, res) => {
   res.send("entre");
+});
+
+//fav
+router.get(`/fav/:id`, (req, res) => {
+  const { id } = req.params;
+
+  User.findByPk(id)
+    .then((user) => {
+      Product.findByPk(2).then((product) => {
+        product.addUser(user);
+        res.send("ok");
+      });
+    })
+    .catch((error) => console.log(error));
 });
 
 router.post("/login", (req, res) => {
@@ -35,17 +51,19 @@ router.post("/login", (req, res) => {
 });
 
 router.post("/signup", (req, res) => {
+  let createdUser;
+
   User.create(req.body)
     .then((user) => {
-      Favorite.create({ id: user.id })
-        .then((favorite) => {
-          user.setFavorite(favorite);
-        })
-        .then(() => {
-          Cart.create()
-            .then((cart) => cart.setCartOwner(user))
-            .then(() => res.send("Usuario creado con su carrito y favorito"));
-        });
+      createdUser = user;
+      Favorite.create({ id: user.id }).then((favorite) => {
+        user.setFavorite(favorite);
+      });
+    })
+    .then(() => {
+      Cart.create()
+        .then((cart) => cart.setUser(createdUser))
+        .then(() => res.send("Usuario creado con su carrito y favorito"));
     })
     .catch((error) => {
       console.log(error);
