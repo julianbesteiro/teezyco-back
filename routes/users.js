@@ -1,104 +1,27 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
-const Cart = require("../models/Cart");
-const { generateToken } = require("../config/tokens");
+
 const { validateAuth } = require("../middlewares/auth");
-const Favorite = require("../models/Favorite");
 
-router.get("/", (req, res) => {
-  res.send("entre");
-});
+const { login, signup, me, logout, updateId, all, deleteId, changeAdmin } = require("../controllers/users");
 
-router.post("/login", (req, res) => {
-  const { email, password } = req.body;
 
-  User.findOne({ where: { email } }).then((user) => {
-    if (!user) return res.sendStatus(401);
-    user.validatePassword(password).then((isValid) => {
-      if (!isValid) return res.sendStatus(401);
+router.post("/login", login);
 
-      const payload = {
-        email: user.email,
-        name: user.name,
-        lastName: user.lastName,
-        id: user.id,
-        admin: user.admin,
-      };
+router.post("/signup", signup);
 
-      const token = generateToken(payload);
+router.get("/me", validateAuth, me );
 
-      res.cookie("token", token);
-      res.send(payload);
-    });
-  });
-});
+router.post("/logout", logout);
 
-router.post("/signup", (req, res) => {
-  User.create(req.body)
-    .then((user) => {
-      Favorite.create({ id: user.id })
-        .then((favorite) => {
-          user.setFavorite(favorite);
-        })
-        .then(() => {
-          Cart.create()
-            .then((cart) => cart.setCartOwner(user))
-            .then(() => res.send("Usuario creado con su carrito y favorito"));
-        });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-
-router.get("/me", validateAuth, (req, res) => {
-  res.send(req.user);
-});
-
-router.post("/logout", (req, res) => {
-  res.clearCookie("token");
-
-  res.sendStatus(204);
-});
-
-router.put("/update/:id", (req, res) => {
-  const { id } = req.params;
-
-  User.update(req.body, { where: { id } })
-    .then(() => res.status(200).send("Datos de usuario actualizados"))
-    .catch((error) => console.log(error));
-});
+router.put("/update/:id", updateId);
 
 //RUTAS USER ADMIN
 
-router.get("/all", (req, res) => {
-  User.findAll({ order: [["id", "ASC"]] }).then((users) => {
-    res.send(users.map((user) => user.dataValues));
-  });
-});
+router.get("/all", all);
 
-router.delete("/delete/:id", (req, res) => {
-  const { id } = req.params;
+router.delete("/delete/:id",deleteId);
 
-  User.destroy({ where: { id } })
-    .then((user) => {
-      res.status(202).send("Usuario eliminado");
-    })
-    .catch((error) => console.log(error));
-});
-
-router.put("/changeadmin/:id", (req, res) => {
-  const { id } = req.params;
-
-  User.findOne({ where: { id } })
-    .then((user) => {
-      const status = !user.admin;
-
-      User.update({ admin: status }, { where: { id } });
-    })
-    .then(() => res.status(200).send("Usuario actualizado"))
-    .catch((error) => console.log(error));
-});
+router.put("/changeadmin/:id", changeAdmin );
 
 module.exports = router;
